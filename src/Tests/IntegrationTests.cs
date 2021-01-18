@@ -15,5 +15,15 @@ namespace Tests
             
             await email.Send("silas.reinagel@gmail.com", "Test Report 2 - 01/15/21", "Test Data\r\nLine 2");
         }
+
+        [TestMethod]
+        public async Task CoinApi_GetCurrentEthPrice()
+        {
+            var api = new CoinApi();
+
+            var price = await api.GetSymbolUsdPrice("ETH");
+            
+            Assert.IsTrue(price > 0);
+        }
     }
 }
