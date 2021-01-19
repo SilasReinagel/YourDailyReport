@@ -4,11 +4,14 @@ using System.Threading.Tasks;
 
 namespace SilasReinagel.YourDailyReport
 {
-  public class MailSender
+  public class Email
   {
-      private readonly MailSenderConfigString _cfg;
+      private readonly EmailConfigString _cfg;
 
-      public MailSender(MailSenderConfigString cfg) => _cfg = cfg;
+      public Email() 
+          : this(new EmailConfigString(new EnvironmentVariable("YourDailyReportMailConfig"))) {}
+
+      public Email(EmailConfigString cfg) => _cfg = cfg;
 
       public async Task Send(string toAddress, string subject, string body)
       {
@@ -31,11 +34,11 @@ namespace SilasReinagel.YourDailyReport
       }
   }
 
-  public class MailSenderConfigString
+  public class EmailConfigString
   {
       private readonly string _cfg;
 
-      public MailSenderConfigString(string cfg) => _cfg = cfg;
+      public EmailConfigString(string cfg) => _cfg = cfg;
 
       public string SmtpHost => _cfg.Split('|')[0].Split(':')[0];
       public int SmtpPort => int.Parse(_cfg.Split('|')[0].Split(':')[1]);

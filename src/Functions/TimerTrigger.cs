@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
@@ -7,10 +8,22 @@ namespace SilasReinagel.YourDailyReport
 {
     public static class TimerTrigger
     {
-        [FunctionName("TimerTrigger")]
-        public static void Run([TimerTrigger("0 0 4 * * *")]TimerInfo myTimer, ILogger log)
+        private static ReportConfig _staticReportConfig = new ReportConfig
         {
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            ToAddress = "silas.reinagel@gmail.com",
+            ReportElements = new ReportElements
+            {
+                ("CryptoPriceUSD", "BTC"),
+                ("CryptoPriceUSD", "ETH")
+            }
+        };
+        
+        [FunctionName("TimerTrigger")]
+        public static async Task Run([TimerTrigger("0 0 4 * * *")]TimerInfo myTimer, ILogger log)
+        {
+            var reporting = new Reporting(new Email(), new CoinApi());
+            
+            await reporting.Publish(_staticReportConfig);
         }
     }
 }
