@@ -19,9 +19,9 @@ namespace SilasReinagel.YourDailyReport
         };
         
         [FunctionName("TimerTrigger")]
-        public static async Task Run([TimerTrigger("0 0 4 * * *")]TimerInfo myTimer, ILogger log)
+        public static async Task Run([TimerTrigger("0 0 11 * * *")]TimerInfo myTimer, ILogger log)
         {
-            var reporting = new Reporting(new Email(), new CoinApi());
+            var reporting = new Reporting(new Email(), new CoinApi(), log);
             
             await reporting.Publish(_staticReportConfig);
         }
